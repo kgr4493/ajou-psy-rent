@@ -30,8 +30,9 @@ export async function savePhoto(file: File, prefix: string): Promise<string> {
     metadata: { contentType: type },
   });
 
-  // 공개 읽기 허용
-  await fileRef.makePublic();
-
-  return fileRef.publicUrl();
+  // Firebase Storage 규칙으로 공개 읽기를 허용하므로 makePublic() 불필요.
+  // (Cloud 결제 없이 동작하는 Firebase Storage URL 방식)
+  const encodedPath = encodeURIComponent(filename);
+  const storageBucket = process.env.FIREBASE_STORAGE_BUCKET ?? process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+  return `https://firebasestorage.googleapis.com/v0/b/${storageBucket}/o/${encodedPath}?alt=media`;
 }
