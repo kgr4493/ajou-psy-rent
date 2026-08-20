@@ -71,9 +71,11 @@ export async function getRentals(filters?: {
   studentId?: string;
   activeOnly?: boolean;
 }): Promise<Rental[]> {
-  let query: FirebaseFirestore.Query = db()
-    .collection(RENTALS)
-    .orderBy("rentedAt", "desc");
+  // Firestore requires a composite index when combining where() on one field
+  // with orderBy() on a different field. To avoid the index requirement,
+  // apply orderBy only when no filters are active, and sort in-memory otherwise.
+  const hasFilter = filters?.activeOnly || filters?.studentId;
+  let query: FirebaseFirestore.Query = db().collection(RENTALS);
 
   if (filters?.activeOnly) {
     query = query.where("returnedAt", "==", null);
@@ -81,9 +83,18 @@ export async function getRentals(filters?: {
   if (filters?.studentId) {
     query = query.where("studentId", "==", filters.studentId);
   }
+  if (!hasFilter) {
+    query = query.orderBy("rentedAt", "desc");
+  }
 
   const snap = await query.get();
-  return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Rental, "id">) }));
+  const docs = snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<Rental, "id">) }));
+
+  if (hasFilter) {
+    docs.sort((a, b) => new Date(b.rentedAt).getTime() - new Date(a.rentedAt).getTime());
+  }
+
+  return docs;
 }
 
 export async function getActiveRentalCountForItem(itemId: string): Promise<number> {

@@ -5,7 +5,12 @@ import { getItemsWithStock } from "@/lib/store";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const items = await getItemsWithStock();
+  let items: Awaited<ReturnType<typeof getItemsWithStock>> = [];
+  try {
+    items = await getItemsWithStock();
+  } catch (err) {
+    console.error("[HomePage] Firebase error:", err);
+  }
   const remaining = items.reduce((sum, item) => sum + item.remaining, 0);
 
   return (
