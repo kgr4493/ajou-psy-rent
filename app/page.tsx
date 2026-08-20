@@ -11,7 +11,7 @@ export default async function HomePage() {
   return (
     <div className="space-y-5">
       <section className="rounded-3xl bg-black px-5 py-5 text-white">
-        <p className="text-sm text-white/50">과방에 지금 남아 있는 물품</p>
+        <p className="text-sm text-white/50">과방에 지금 남아 있는 물품!</p>
         <p className="mt-1 text-5xl font-bold">{remaining}개</p>
         <p className="mt-2 text-sm text-white/60">
           빌리는 사람이 직접 기록하고, 다음에 올 사람은 여기서 남은 수를 보면 됩니다.
