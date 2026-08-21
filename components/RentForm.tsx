@@ -41,7 +41,7 @@ export function RentForm({ items, defaultName }: Props) {
       return;
     }
 
-    router.push("/status?done=rent");
+    router.push("/?done=rent");
     router.refresh();
   }
 
@@ -68,7 +68,9 @@ export function RentForm({ items, defaultName }: Props) {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-black">물품</span>
+        <span className="mb-1.5 block text-sm font-medium text-black">
+          물품 <span className="text-red-500">*</span>
+        </span>
         <select
           name="itemId"
           required
@@ -87,7 +89,9 @@ export function RentForm({ items, defaultName }: Props) {
       </label>
 
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-black">수량</span>
+        <span className="mb-1.5 block text-sm font-medium text-black">
+          수량 <span className="text-red-500">*</span>
+        </span>
         <input
           name="quantity"
           type="number"
@@ -99,7 +103,9 @@ export function RentForm({ items, defaultName }: Props) {
       </label>
 
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-black">학번</span>
+        <span className="mb-1.5 block text-sm font-medium text-black">
+          학번 <span className="text-red-500">*</span>
+        </span>
         <input
           name="studentId"
           inputMode="numeric"
@@ -111,7 +117,9 @@ export function RentForm({ items, defaultName }: Props) {
       </label>
 
       <label className="block">
-        <span className="mb-1.5 block text-sm font-medium text-black">이름</span>
+        <span className="mb-1.5 block text-sm font-medium text-black">
+          이름 <span className="text-red-500">*</span>
+        </span>
         <input
           name="studentName"
           placeholder="본인 이름"

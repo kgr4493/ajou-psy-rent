@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { isAdmin } from "@/lib/admin";
 import { getRentals } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +18,8 @@ export default async function StatusPage({
 }: {
   searchParams: Promise<{ done?: string }>;
 }) {
+  if (!(await isAdmin())) redirect("/");
+
   const { done } = await searchParams;
   const rentals = await getRentals({ activeOnly: true });
 

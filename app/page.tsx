@@ -4,7 +4,13 @@ import { getItemsWithStock } from "@/lib/store";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ done?: string }>;
+}) {
+  const { done } = await searchParams;
+
   let items: Awaited<ReturnType<typeof getItemsWithStock>> = [];
   try {
     items = await getItemsWithStock();
@@ -15,6 +21,11 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-5">
+      {done === "rent" && (
+        <p className="rounded-2xl bg-gray-100 px-4 py-3 text-sm text-black">
+          대여가 기록되었습니다. 재고 수량이 바로 반영됩니다.
+        </p>
+      )}
       <section className="rounded-3xl bg-black px-5 py-5 text-white">
         <p className="text-sm text-white/50">과방에 지금 남아 있는 물품!</p>
         <p className="mt-1 text-5xl font-bold">{remaining}개</p>

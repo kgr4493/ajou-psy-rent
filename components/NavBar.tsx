@@ -7,14 +7,13 @@ const links = [
   { href: "/", label: "재고" },
   { href: "/rent", label: "대여" },
   { href: "/return", label: "반납" },
-  { href: "/status", label: "현황" },
   { href: "/admin", label: "관리" },
 ];
 
 export function NavBar() {
   const pathname = usePathname();
   return (
-    <nav className="grid grid-cols-5 gap-1 rounded-2xl bg-gray-100 p-1">
+    <nav className="grid grid-cols-4 gap-1 rounded-2xl bg-gray-100 p-1">
       {links.map((link) => {
         const active =
           pathname === link.href ||
