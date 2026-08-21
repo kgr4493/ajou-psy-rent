@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
     emoji?: string;
     total?: number;
     note?: string;
+    consumable?: boolean;
   };
 
   const name = body.name?.trim();
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
     emoji: body.emoji?.trim() || "📦",
     total,
     note: body.note?.trim() || "",
+    consumable: body.consumable ?? false,
   });
   return Response.json({ item });
 }

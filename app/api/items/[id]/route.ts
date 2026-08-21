@@ -28,6 +28,7 @@ export async function PATCH(
     emoji?: string;
     total?: number;
     note?: string;
+    consumable?: boolean;
   };
 
   try {
@@ -42,6 +43,7 @@ export async function PATCH(
     if (typeof body.emoji === "string" && body.emoji.trim())
       patch.emoji = body.emoji.trim();
     if (typeof body.note === "string") patch.note = body.note.trim();
+    if (typeof body.consumable === "boolean") patch.consumable = body.consumable;
 
     if (body.total !== undefined) {
       const total = Number(body.total);

@@ -4,6 +4,7 @@ export type Item = {
   emoji: string;
   total: number;
   note: string;
+  consumable?: boolean;
 };
 
 export type Rental = {

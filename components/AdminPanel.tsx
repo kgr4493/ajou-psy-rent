@@ -29,6 +29,7 @@ export function AdminPanel({
       emoji: String(fd.get("emoji") ?? ""),
       total: Number(fd.get("total")),
       note: String(fd.get("note") ?? ""),
+      consumable: fd.get("consumable") === "on",
     };
     const res = await fetch("/api/items", {
       method: "POST",
@@ -42,6 +43,21 @@ export function AdminPanel({
     }
     form.reset();
     router.refresh();
+  }
+
+  async function toggleConsumable(id: string, current: boolean) {
+    setError("");
+    const res = await fetch(`/api/items/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ consumable: !current }),
+    });
+    const data = (await res.json()) as { error?: string };
+    if (!res.ok) {
+      setError(data.error ?? "수정에 실패했습니다.");
+    } else {
+      router.refresh();
+    }
   }
 
   async function saveTotal(id: string, total: number) {
@@ -89,20 +105,30 @@ export function AdminPanel({
         <ul className="mt-4 space-y-3">
           {items.map((item) => (
             <li key={item.id} className="flex items-center gap-3">
-              <span className="w-36 shrink-0 text-sm font-medium text-black">
+              <span className="w-32 shrink-0 text-sm font-medium text-black">
                 {item.emoji} {item.name}
               </span>
               <input
                 type="number"
                 min={item.rented}
                 defaultValue={item.total}
-                className="w-20 rounded-xl bg-gray-100 px-2 py-2 text-sm text-black"
+                className="w-16 rounded-xl bg-gray-100 px-2 py-2 text-sm text-black"
                 onBlur={(e) => {
                   const value = Number(e.target.value);
                   if (value !== item.total) saveTotal(item.id, value);
                 }}
               />
-              <span className="text-xs text-gray-400">대여 중 {item.rented}</span>
+              <button
+                type="button"
+                onClick={() => toggleConsumable(item.id, !!item.consumable)}
+                className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-medium transition ${
+                  item.consumable
+                    ? "bg-amber-50 text-amber-700 ring-1 ring-amber-200 hover:bg-amber-100"
+                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                }`}
+              >
+                소모품
+              </button>
               <button
                 type="button"
                 onClick={() => deleteItem(item.id, item.name)}
@@ -144,6 +170,16 @@ export function AdminPanel({
             placeholder="비고 (어디에 두는지)"
             className="rounded-xl bg-gray-100 px-3 py-2 text-black placeholder-gray-400"
           />
+          <label className="flex items-center gap-2 px-1 sm:col-span-2">
+            <input
+              type="checkbox"
+              name="consumable"
+              className="h-4 w-4 rounded accent-amber-500"
+            />
+            <span className="text-sm text-gray-600">
+              소모품 (인공눈물 등 — 재고에서 대여 중 표시 없이 남은 수만 표시)
+            </span>
+          </label>
           <button className="rounded-xl bg-black py-2 text-sm font-semibold text-white hover:bg-gray-800 transition sm:col-span-2">
             추가
           </button>
